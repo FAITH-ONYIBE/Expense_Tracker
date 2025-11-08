@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+{% block content %}
+  <div style="max-width: 400px; margin: 60px auto; padding: 30px; box-shadow: 0 0 10px rgba(0,0,0,0.1); border-radius: 8px;">
+      <h2 style="text-align: center; margin-bottom: 20px;">Create Account</h2>
+      <form method="post">
+          {% csrf_token %}
+          {{ form.as_p }}
+          <button type="submit" style="width: 100%; padding: 10px; background-color: #4CAF50; color: white; border: none; border-radius: 5px;">Register</button>
+      </form>
+      <p style="text-align:center; margin-top:15px;">
+          Already have an account? <a href="{% url 'login' %}">Login</a>
+      </p>
+  </div>
+{% endblock %}

@@ -1,0 +1,74 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="row">
+  <div class="col-md-4">
+    <div class="card shadow-sm text-center">
+      <div class="card-body">
+        <h5 class="card-title">Total Expenses</h5>
+        <h2 class="text-success fw-bold">₦{{ total }}</h2>
+        <a href="{% url 'add_expense' %}" class="btn btn-primary mt-2">+ Add Expense</a>
+      </div>
+    </div>
+
+    <div class="card mt-4 shadow-sm">
+      <div class="card-body">
+        <h5 class="card-title mb-3">Expense Breakdown</h5>
+        <canvas id="categoryChart"></canvas>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-md-8">
+    <div class="card shadow-sm">
+      <div class="card-body">
+        <h5 class="card-title mb-3">Recent Transactions</h5>
+
+        <table class="table table-hover align-middle">
+          <thead class="table-dark">
+            <tr>
+              <th>Title</th>
+              <th>Category</th>
+              <th>Amount</th>
+              <th>Date</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for expense in expenses %}
+              <tr>
+                <td>{{ expense.title }}</td>
+                <td>{{ expense.category|title }}</td>
+                <td>₦{{ expense.amount }}</td>
+                <td>{{ expense.date }}</td>
+                <td>
+                  <a href="{% url 'delete_expense' expense.id %}" class="btn btn-sm btn-outline-danger">Delete</a>
+                </td>
+              </tr>
+            {% empty %}
+              <tr><td colspan="5" class="text-center">No expenses yet.</td></tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  const ctx = document.getElementById('categoryChart');
+  const chartData = {
+    labels: [{% for expense in expenses %}'{{ expense.category }}',{% endfor %}],
+    datasets: [{
+      label: 'Expenses by Category',
+      data: [{% for expense in expenses %}{{ expense.amount }},{% endfor %}],
+      backgroundColor: ['#007bff','#ffc107','#dc3545','#28a745','#6c757d'],
+    }]
+  };
+
+  new Chart(ctx, {
+    type: 'doughnut',
+    data: chartData,
+  });
+</script>
+{% endblock %}
+
